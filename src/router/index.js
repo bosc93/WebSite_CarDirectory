@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import NavBar from '@/components/NavBar'
+import Welcome from '@/components/Welcome'
 
 Vue.use(Router)
 
@@ -8,8 +8,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'NavBar',
-      component: NavBar
+      name: 'Welcome',
+      component: Welcome
     }
   ]
 })

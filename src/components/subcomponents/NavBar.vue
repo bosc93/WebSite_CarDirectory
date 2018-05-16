@@ -51,7 +51,7 @@
 
 <script>
 export default {
-  name: 'NavBar',
+  name: 'navBar',
   data () {
     return {
       msg: 'CarDirectory'

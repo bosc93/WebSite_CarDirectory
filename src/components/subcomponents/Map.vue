@@ -1,17 +1,11 @@
 <template>
-  <div class="description">
-      
+  <div class="map">
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Description',
-  data () {
-    return {
-      msg: ''
-    }
-  }
+  name: 'map'
 }
 </script>
 

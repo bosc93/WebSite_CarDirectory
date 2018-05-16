@@ -1,16 +1,21 @@
 <template>
   <div>
-    {{ msg }}
+    <NavBar></NavBar>
+    <SearchMap></SearchMap>
+    <Map></Map>
   </div>
 </template>
 
 <script>
+import NavBar from './subcomponents/NavBar'
+import SearchMap from './subcomponents/SearchMap'
+import Map from './subcomponents/Map'
+
 export default {
-  name: 'SearchBar',
+  name: 'welcome',
+  components: {NavBar, SearchMap, Map},
   data () {
-    return {
-      msg: 'SearchBar'
-    }
+    return {}
   }
 }
 </script>
