@@ -1,30 +1,97 @@
 <template>
-  <div class="search">
+  <div class="searchMap">
     <div class="icon_map">
-      <img src="../../assets/searchIcon.png">
+      <input type="image" src="https://theunrefined.com.au/wp-content/plugins/google-maps/assets/images/icons/greenmarker256.png" @click="geolocate" alt="geolocalisation" id="icon" class="icon"/>
     </div>
     <div class="search_store">
       <div class="search_bar">
-        <b-input-group prepend="Search">
-          <b-form-input  placeholder="Ville ou concession"/>
+        <b-input-group prepend="Recherchez">
+          <gmap-autocomplete @place_changed="setPlace" placeholder="Adresse ou concession" class="addressMap"/>
           <b-input-group-append>
-            <b-btn size="sm" text="Button" variant="success">Button</b-btn>
+            <b-btn @click="addMarkerSearch" size="sm" text="Valid" variant="success">Valider</b-btn>
           </b-input-group-append>
         </b-input-group>
       </div>
+    </div>
+    <div>
+      <br>
+      <gmap-map
+        :center="center"
+        :zoom="zoom"
+        style="width:100%;  height: 425px;"
+      >
+        <gmap-marker
+          :key="index"
+          v-for="(m, index) in markers"
+          :position="m.position"
+          @click="center=m.position"
+        ></gmap-marker>
+      </gmap-map>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'searchMap'
+  name: 'searchMap',
+  props: ['name'],
+  data () {
+    return {
+      center: {lat: 43.63144, lng: 3.84642},
+      zoom: 12,
+      markers: [],
+      places: [],
+      currentPlace: null
+    }
+  },
+  mounted () {
+    // this.geolocate()
+  },
+  methods: {
+    // receives a place object via the autocomplete component
+    setPlace (place) {
+      this.currentPlace = place
+    },
+    addMarkerSearch () {
+      // if(ville dans la barre de recherche && this.currentPlace)
+      if (this.currentPlace) {
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng()
+        }
+        this.markers.push({ position: marker })
+        this.places.push(this.currentPlace)
+        this.center = marker
+        this.currentPlace = null
+      }
+      this.zoom = 14
+    },
+    addMarkerGeolocalisation (latitude, longitude) {
+      const marker = {
+        lat: latitude,
+        lng: longitude
+      }
+      this.markers.push({ position: marker })
+      this.center = marker
+      this.currentPlace = null
+    },
+    geolocate: function () {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+        this.zoom = 15
+        this.addMarkerGeolocalisation(position.coords.latitude, position.coords.longitude)
+      })
+    }
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-img {
+.icon {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -33,8 +100,8 @@ img {
 }
 .icon_map {
   background-color: white;
-  padding-top: 3%;
-  padding-bottom: 3%;
+  padding-top: 1%;
+  padding-bottom: 1%;
   background-image: url("../../assets/fond_degradeBleu.jpg");
 }
 .search_store {
@@ -47,5 +114,8 @@ img {
   padding-top: 1%;
   padding-bottom: 1%;
   width: 70%;
+}
+.addressMap {
+  width: 80%;
 }
 </style>

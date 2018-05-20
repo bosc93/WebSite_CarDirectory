@@ -6,10 +6,18 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import App from './App'
 import router from './router'
+import * as VueGoogleMaps from 'vue2-google-maps'
 // import * as mysql from 'mysql'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyDHecluKDprEeKSbk3WkCLHjEUEa6CNXmg',
+    libraries: 'places' // necessary for places input
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
