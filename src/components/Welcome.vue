@@ -8,7 +8,6 @@
 <script>
 import NavBar from './subcomponents/NavBar'
 import SearchMap from './subcomponents/SearchMap'
-
 export default {
   name: 'welcome',
   components: {NavBar, SearchMap},
