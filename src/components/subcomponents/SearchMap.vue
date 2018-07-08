@@ -13,23 +13,32 @@
         </b-input-group>
       </div>
     </div>
-    <div>
-      <br>
+    <div id="map">
       <gmap-map
         :center="center"
         :zoom="zoom"
         style="width:100%;  height: 425px;"
       >
+        <gmap-info-window
+          :options="infoOptions"
+          :position="infoWindowPos"
+          :opened="infoWinOpen"
+          @closeclick="infoWinOpen=false">
+          {{infoContent}}
+        </gmap-info-window>
         <gmap-marker
           :key="index"
           v-for="(m, index) in markers"
           :position="m.position"
-          @click="center=m.position"
+          :clickable="true"
+          @click="toggleInfoWindow(m,index)"
         ></gmap-marker>
       </gmap-map>
     </div>
   </div>
 </template>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHecluKDprEeKSbk3WkCLHjEUEa6CNXmg"></script>
 
 <script>
 export default {
@@ -37,38 +46,62 @@ export default {
   props: ['name'],
   data () {
     return {
-      center: {lat: 43.63144, lng: 3.84642},
-      zoom: 12,
-      tMarker: [
-        { lat: 46.63144,
-          lng: 3.84642,
-          title: 'Montpellier',
-          type: 'concession'
-        },
-        { lat: 45.767299,
-          lng: 4.834329,
-          title: 'Lyon',
-          type: 'concession'
-        },
-        { lat: 43.297612,
-          lng: 5.381042,
-          title: 'Marseille',
-          type: 'concession'
-        },
-        {
-          lat: 48.856667,
-          lng: 2.350987,
-          title: 'Paris',
-          type: 'concession'
+      center: {lat: 46.7667, lng: 2.45}, // Bruère-Allichamps centre exact de la France
+      zoom: 5,
+      infoContent: '',
+      infoWindowPos: {
+        lat: 0,
+        lng: 0
+      },
+      infoWinOpen: false,
+      currentMidx: null,
+      // optional: offset infowindow so it visually sits nicely on top of our marker
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
         }
-      ],
+      },
+      /*tMarker: [{
+        position: {
+          lat: 43.6109,
+          lng: 3.87723
+        },
+        title: 'Montpellier',
+        type: 'concession'
+      }, {
+        position: {
+          lat: 45.767299,
+          lng: 4.834329
+        },
+        title: 'Lyon',
+        type: 'concession'
+      }, {
+        position: {
+          lat: 43.297612,
+          lng: 5.381042
+        },
+        title: 'Marseille',
+        type: 'concession'
+      }, {
+        position: {
+          lat: 48.856667,
+          lng: 2.350987
+        },
+        title: 'Paris',
+        type: 'concession'
+      }],*/
+      tMarker: [],
       markers: [],
       places: [],
       currentPlace: null,
-      text: ''
+      text: '',
+      titleMarker: [],
+      positionMarker: []
     }
   },
-  mounted () {
+  mounted: function(){
+    this.getAllMembers();
   },
   methods: {
     // receives a place object via the autocomplete component
@@ -119,18 +152,48 @@ export default {
     },
     displayMarkersCarDealer (latitude, longitude, tmarker) {
       // Avec les latitude et longitude récupéré, mettre les markers (qui vont être récupéré dans la bdd) dans un rayon de 10km
-      var oLatLng, data
+      var data
       var i
       var nb = tmarker.length
       for (i = 0; i < nb; i++) {
         data = tmarker[i]
-        oLatLng = {
-          lat: data.lat,
-          lng: data.lng,
-          title: data.title
-        }
-        this.markers.push({ position: oLatLng })
+        this.markers.push({ position: data.position })
+        this.titleMarker[i] = data.title
+        this.positionMarker[i] = data.position
       }
+    },
+    toggleInfoWindow: function (marker, index) {
+      var cpt = 0
+      var nb = this.positionMarker.length
+      for (var i = 0; i < nb; i++) {
+        if (marker.position == this.positionMarker[i]) {
+          this.infoContent = this.titleMarker[i]
+          cpt = cpt + 1
+        }
+      }
+      if (cpt == 0) {
+        this.infoContent = 'Votre position'
+      }
+      this.center = marker.position
+      this.zoom = 16
+      this.infoWindowPos = marker.position
+      // check if its the same marker that was selected if yes toggle
+      if (this.currentMidx == index) {
+        this.infoWinOpen = !this.infoWinOpen
+      } else { // if different marker set infowindow to open and reset current marker index
+        this.infoWinOpen = true
+        this.currentMidx = index
+      }
+      cpt = 0
+    },
+    getAllMembers: function () {
+      axios.get('ajaxfile.php')
+      .then(function (response) {
+         app.tMarker = response.data
+      })
+      .catch(function (error) {
+         console.log(error)
+      })
     }
   }
 }

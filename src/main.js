@@ -7,6 +7,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import App from './App'
 import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import axios from 'axios'
 // import * as mysql from 'mysql'
 
 Vue.config.productionTip = false
@@ -23,6 +24,7 @@ Vue.use(VueGoogleMaps, {
 new Vue({
   el: '#app',
   router,
+  axios,
   components: { App },
   template: '<App/>'
 })
