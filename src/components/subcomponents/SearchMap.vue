@@ -187,9 +187,10 @@ export default {
       cpt = 0
     },
     getAllMembers: function () {
-      axios.get('ajaxfile.php')
+      this.$http.get('ajaxfile.php') // Marche très bien avec une url je récupère bien les éléments
       .then(function (response) {
-         app.tMarker = response.data
+         this.tMarker = response.data
+         console.log(this.tMarker)
       })
       .catch(function (error) {
          console.log(error)
