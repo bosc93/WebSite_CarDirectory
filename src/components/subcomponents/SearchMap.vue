@@ -46,7 +46,7 @@ export default {
   props: ['name'],
   data () {
     return {
-      center: {lat: 46.7667, lng: 2.45}, // Bruère-Allichamps centre exact de la France
+      center: { lat: 46.7667, lng: 2.45 }, // Bruère-Allichamps centre exact de la France
       zoom: 5,
       infoContent: '',
       infoWindowPos: {
@@ -96,12 +96,12 @@ export default {
       places: [],
       currentPlace: null,
       text: '',
-      titleMarker: [],
+      infoMarker: [],
       positionMarker: []
     }
   },
   mounted: function(){
-    this.getAllMembers();
+    this.getAllConcession()
   },
   methods: {
     // receives a place object via the autocomplete component
@@ -151,15 +151,16 @@ export default {
       }
     },
     displayMarkersCarDealer (latitude, longitude, tmarker) {
-      // Avec les latitude et longitude récupéré, mettre les markers (qui vont être récupéré dans la bdd) dans un rayon de 10km
+      // Avec les latitudes et longitudes récupérées, mettre les markers (qui vont être récupéré dans la bdd) dans un rayon de 10km
       var data
       var i
       var nb = tmarker.length
       for (i = 0; i < nb; i++) {
         data = tmarker[i]
-        this.markers.push({ position: data.position })
-        this.titleMarker[i] = data.title
-        this.positionMarker[i] = data.position
+        this.positionMarker[i] = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) }
+        this.infoMarker[i] = data.raisonSociale
+
+        this.markers.push({ position: this.positionMarker[i] }) // Affiche les markers
       }
     },
     toggleInfoWindow: function (marker, index) {
@@ -167,7 +168,7 @@ export default {
       var nb = this.positionMarker.length
       for (var i = 0; i < nb; i++) {
         if (marker.position == this.positionMarker[i]) {
-          this.infoContent = this.titleMarker[i]
+          this.infoContent = this.infoMarker[i]
           cpt = cpt + 1
         }
       }
@@ -186,8 +187,8 @@ export default {
       }
       cpt = 0
     },
-    getAllMembers: function () {
-      this.$http.get('ajaxfile.php') // Marche très bien avec une url je récupère bien les éléments
+    getAllConcession: function () {
+      this.$http.get('http://localhost:81/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
       .then(function (response) {
          this.tMarker = response.data
          console.log(this.tMarker)

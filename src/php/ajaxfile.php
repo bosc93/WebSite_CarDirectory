@@ -1,5 +1,5 @@
 <?php
-include "config.php";
+require 'config.php';
 
 $condition = "1";
 if(isset($_GET['idConcession'])){
