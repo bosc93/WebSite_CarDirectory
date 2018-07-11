@@ -1,7 +1,7 @@
 <template>
   <div class="searchMap">
     <div class="icon_map">
-      <input type="image" src="https://theunrefined.com.au/wp-content/plugins/google-maps/assets/images/icons/greenmarker256.png" @click="geolocate" alt="geolocalisation" id="icon" class="icon"/>
+      <input type="image" src="http://localhost:81/ProjectCar/Images/searchIcon.png" @click="geolocate" alt="geolocalisation" id="icon" class="icon"/>
     </div>
     <div class="search_store">
       <div class="search_bar">
@@ -13,11 +13,11 @@
         </b-input-group>
       </div>
     </div>
-    <div id="map">
+    <div>
       <gmap-map
         :center="center"
         :zoom="zoom"
-        style="width:100%;  height: 425px;"
+        style="width:100%;  height: 500px;"
       >
         <gmap-info-window
           :options="infoOptions"
@@ -30,6 +30,7 @@
           :key="index"
           v-for="(m, index) in markers"
           :position="m.position"
+          :icon.sync="m.icon"
           :clickable="true"
           @click="toggleInfoWindow(m,index)"
         ></gmap-marker>
@@ -62,35 +63,6 @@ export default {
           height: -35
         }
       },
-      /*tMarker: [{
-        position: {
-          lat: 43.6109,
-          lng: 3.87723
-        },
-        title: 'Montpellier',
-        type: 'concession'
-      }, {
-        position: {
-          lat: 45.767299,
-          lng: 4.834329
-        },
-        title: 'Lyon',
-        type: 'concession'
-      }, {
-        position: {
-          lat: 43.297612,
-          lng: 5.381042
-        },
-        title: 'Marseille',
-        type: 'concession'
-      }, {
-        position: {
-          lat: 48.856667,
-          lng: 2.350987
-        },
-        title: 'Paris',
-        type: 'concession'
-      }],*/
       tMarker: [],
       markers: [],
       places: [],
@@ -125,11 +97,12 @@ export default {
       this.zoom = 14
     },
     addMarkerGeolocalisation (latitude, longitude) {
+      var image = 'http://localhost:81/ProjectCar/Images/greenMarker.png'
       const marker = {
         lat: latitude,
         lng: longitude
       }
-      this.markers.push({ position: marker })
+      this.markers.push({ position: marker, icon: image })
       this.center = marker
       this.currentPlace = null
     },
@@ -141,14 +114,10 @@ export default {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         }
-        this.zoom = 15
+        this.zoom = 13
         this.addMarkerGeolocalisation(position.coords.latitude, position.coords.longitude)
         this.displayMarkersCarDealer(position.coords.latitude, position.coords.longitude, this.tMarker)
       })
-      if (this.center !== this.marker) {
-        this.center = this.markers
-        this.zoom = 15
-      }
     },
     displayMarkersCarDealer (latitude, longitude, tmarker) {
       // Avec les latitudes et longitudes récupérées, mettre les markers (qui vont être récupéré dans la bdd) dans un rayon de 10km
@@ -158,8 +127,26 @@ export default {
       for (i = 0; i < nb; i++) {
         data = tmarker[i]
         this.positionMarker[i] = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) }
-        this.infoMarker[i] = data.raisonSociale
-
+        var contentHtml = document.createElement('div')
+        contentHtml.innerHTML = '<html><head><title>' + data.raisonSociale + '</title></head><body>' + '<h1>'+ data.raisonSociale + '</h1>' +
+            '</br>'+
+            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+            'sandstone rock formation in the southern part of the '+
+            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+            'south west of the nearest large town, Alice Springs; 450&#160;km '+
+            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+            'Aboriginal people of the area. It has many springs, waterholes, '+
+            'rock caves and ancient paintings. Uluru is listed as a World '+
+            'Heritage Site.</p>'+
+            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+            '(last visited June 22, 2009).</p>' +
+            '</body>' +
+            '</html>'
+        this.infoMarker[i] = contentHtml
+        console.log(contentHtml)
         this.markers.push({ position: this.positionMarker[i] }) // Affiche les markers
       }
     },
@@ -188,7 +175,7 @@ export default {
       cpt = 0
     },
     getAllConcession: function () {
-      this.$http.get('http://localhost:81/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
+      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
       .then(function (response) {
          this.tMarker = response.data
          console.log(this.tMarker)
