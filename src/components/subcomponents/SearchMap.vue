@@ -14,7 +14,7 @@
       </div>
     </div>
     <div>
-      <gmap-map
+      <gmap-map id="map"
         :center="center"
         :zoom="zoom"
         style="width:100%;  height: 500px;"
@@ -24,7 +24,7 @@
           :position="infoWindowPos"
           :opened="infoWinOpen"
           @closeclick="infoWinOpen=false">
-          {{infoContent}}
+          <div v-html="infoContent"></div> <!-- Permet de mettre en html le texte récupéré -->
         </gmap-info-window>
         <gmap-marker
           :key="index"
@@ -40,6 +40,7 @@
 </template>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHecluKDprEeKSbk3WkCLHjEUEa6CNXmg"></script>
+<script src="//maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry"></script>
 
 <script>
 export default {
@@ -120,34 +121,41 @@ export default {
       })
     },
     displayMarkersCarDealer (latitude, longitude, tmarker) {
-      // Avec les latitudes et longitudes récupérées, mettre les markers (qui vont être récupéré dans la bdd) dans un rayon de 10km
-      var data
-      var i
-      var nb = tmarker.length
-      for (i = 0; i < nb; i++) {
+      var data, i, j
+      var nbMarker = tmarker.length
+      for (i = 0; i < nbMarker; i++) {
         data = tmarker[i]
-        this.positionMarker[i] = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) }
-        var contentHtml = document.createElement('div')
-        contentHtml.innerHTML = '<html><head><title>' + data.raisonSociale + '</title></head><body>' + '<h1>'+ data.raisonSociale + '</h1>' +
-            '</br>'+
-            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-            'sandstone rock formation in the southern part of the '+
-            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-            'south west of the nearest large town, Alice Springs; 450&#160;km '+
-            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-            'Aboriginal people of the area. It has many springs, waterholes, '+
-            'rock caves and ancient paintings. Uluru is listed as a World '+
-            'Heritage Site.</p>'+
-            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-            '(last visited June 22, 2009).</p>' +
-            '</body>' +
-            '</html>'
+        var contentHtml = '<div id="bodyContent">' +
+          '<h6><center><a href="http://localhost:8080/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
+          '<div id="bodyContent">' +
+          data.adresse +
+          '</br>' + data.codePostal + ' ' + data.ville +
+          '</br>' + data.pays +
+          '</br><b><a href="' + data.siteWeb + '">Site web</a><b>' +
+          '</div></div>'
         this.infoMarker[i] = contentHtml
-        console.log(contentHtml)
-        this.markers.push({ position: this.positionMarker[i] }) // Affiche les markers
+        this.positionMarker[i] = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) }
+      }
+      var nbPosition = this.positionMarker.length
+      for (j = 0; j < nbPosition; j++) {
+        var data = this.positionMarker[j]
+        var rad = function(x) {
+          return x * Math.PI / 180;
+        }
+        var getDistance = function({lat: latitude, lng: longitude}, data) {
+          var R = 6378137; // Earth’s mean radius in meter
+          this.dLat = rad(data.lat() - {lat: latitude, lng: longitude}.lat());
+          var dLong = rad(data.lng() - {lat: latitude, lng: longitude}.lng());
+          var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(rad({lat: latitude, lng: longitude}.lat())) * Math.cos(rad(data.lat())) *
+            Math.sin(dLong / 2) * Math.sin(dLong / 2);
+          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          vard = R * c;
+          return d; // returns the distance in meter
+        };
+        // if
+        console.log(data)
+        this.markers.push({ position: this.positionMarker[j] }) // Affiche les markers
       }
     },
     toggleInfoWindow: function (marker, index) {
