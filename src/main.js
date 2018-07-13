@@ -8,7 +8,6 @@ import App from './App'
 import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueResource from 'vue-resource'
-// import * as mysql from 'mysql'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -28,14 +27,3 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
-
-// var connection = mysql.createConnection({
-//   port: 3306,
-//   host: 'localhost',
-//   user: 'root',
-//   password: 'root'
-// })
-
-// connection.connect()
-
-// connection.end()

@@ -140,7 +140,7 @@ export default {
         var contentHtml = '<div id="bodyContent">' +
           '<h6><center><a href="http://localhost:8080/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
           '<div id="bodyContent">' +
-          data.numeroVoie + ' ' + data.adresse +
+          data.adresse +
           '</br>' + data.codePostal + ' ' + data.ville +
           '</br>' + data.pays +
           '</br><b><a href="' + data.siteWeb + '">Site web</a><b>' +
