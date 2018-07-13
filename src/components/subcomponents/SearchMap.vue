@@ -6,7 +6,7 @@
     <div class="search_store">
       <div class="search_bar">
         <b-input-group prepend="Recherchez">
-          <b-form-input v-model="text" type="search" @place_changed="setPlace" id="address" placeholder="Adresse ou concession">{{ text }}</b-form-input>
+          <gmap-autocomplete @place_changed="setPlace" placeholder="Adresse ou concession" class="addressMap"/>
           <b-input-group-append>
             <b-btn @click="addMarkerSearch" size="sm" text="Valid" variant="success">Valider</b-btn>
           </b-input-group-append>
@@ -40,7 +40,6 @@
 </template>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHecluKDprEeKSbk3WkCLHjEUEa6CNXmg"></script>
-<script src="//maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry"></script>
 
 <script>
 export default {
@@ -70,7 +69,8 @@ export default {
       currentPlace: null,
       text: '',
       infoMarker: [],
-      positionMarker: []
+      positionMarker: [],
+      addressExist: false
     }
   },
   mounted: function(){
@@ -82,20 +82,32 @@ export default {
       this.currentPlace = place
     },
     addMarkerSearch () {
-      // if(ville dans la barre de recherche && this.currentPlace)
+      var data, i, nomConcession
+      var nbMarker = this.tMarker.length
+      nomConcession = ''
+      this.addressExist = false
       if (this.currentPlace) {
-        this.markers = []
-        const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng()
+        for (i = 0; i < nbMarker; i++) {
+          data = this.tMarker[i]
+          if (this.currentPlace.formatted_address == data.adresse + ', ' + data.codePostal + ' ' +
+              data.ville + ', ' + data.pays) {
+            this.addressExist = true
+            nomConcession = data.raisonSociale
+          }
         }
-        this.markers.push({ position: marker })
-        this.places.push(this.currentPlace)
-        this.center = marker
-        this.displayMarkersCarDealer(this.currentPlace.geometry.location.lat(), this.currentPlace.geometry.location.lng(), this.tMarker)
-        this.currentPlace = null
+        if (this.addressExist) {
+          document.location.href='http://localhost:8080/concession/' + nomConcession
+        }else {
+          this.markers = []
+          const marker = {
+            lat: this.currentPlace.geometry.location.lat(),
+            lng: this.currentPlace.geometry.location.lng()
+          }
+          this.addMarkerGeolocalisation(marker.lat, marker.lng)
+          this.displayMarkersCarDealer()
+        }
       }
-      this.zoom = 14
+      this.zoom = 13
     },
     addMarkerGeolocalisation (latitude, longitude) {
       var image = 'http://localhost:81/ProjectCar/Images/greenMarker.png'
@@ -117,45 +129,25 @@ export default {
         }
         this.zoom = 13
         this.addMarkerGeolocalisation(position.coords.latitude, position.coords.longitude)
-        this.displayMarkersCarDealer(position.coords.latitude, position.coords.longitude, this.tMarker)
+        this.displayMarkersCarDealer()
       })
     },
-    displayMarkersCarDealer (latitude, longitude, tmarker) {
-      var data, i, j
-      var nbMarker = tmarker.length
+    displayMarkersCarDealer () {
+      var data, i
+      var nbMarker = this.tMarker.length
       for (i = 0; i < nbMarker; i++) {
-        data = tmarker[i]
+        data = this.tMarker[i]
         var contentHtml = '<div id="bodyContent">' +
           '<h6><center><a href="http://localhost:8080/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
           '<div id="bodyContent">' +
-          data.adresse +
+          data.numeroVoie + ' ' + data.adresse +
           '</br>' + data.codePostal + ' ' + data.ville +
           '</br>' + data.pays +
           '</br><b><a href="' + data.siteWeb + '">Site web</a><b>' +
           '</div></div>'
         this.infoMarker[i] = contentHtml
         this.positionMarker[i] = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) }
-      }
-      var nbPosition = this.positionMarker.length
-      for (j = 0; j < nbPosition; j++) {
-        var data = this.positionMarker[j]
-        var rad = function(x) {
-          return x * Math.PI / 180;
-        }
-        var getDistance = function({lat: latitude, lng: longitude}, data) {
-          var R = 6378137; // Earth’s mean radius in meter
-          this.dLat = rad(data.lat() - {lat: latitude, lng: longitude}.lat());
-          var dLong = rad(data.lng() - {lat: latitude, lng: longitude}.lng());
-          var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(rad({lat: latitude, lng: longitude}.lat())) * Math.cos(rad(data.lat())) *
-            Math.sin(dLong / 2) * Math.sin(dLong / 2);
-          var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          vard = R * c;
-          return d; // returns the distance in meter
-        };
-        // if
-        console.log(data)
-        this.markers.push({ position: this.positionMarker[j] }) // Affiche les markers
+        this.markers.push({ position: this.positionMarker[i] }) // Affiche les markers
       }
     },
     toggleInfoWindow: function (marker, index) {

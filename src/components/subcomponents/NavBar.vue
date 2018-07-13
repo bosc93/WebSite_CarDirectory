@@ -3,7 +3,7 @@
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-    <b-navbar-brand href="#">
+    <b-navbar-brand href="http://localhost:8080">
       <img src="https://placekitten.com/g/30/30" class="d-inline-block align-top" alt="BV">
       {{ msg }}
     </b-navbar-brand>
