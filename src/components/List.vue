@@ -1,14 +1,16 @@
 <template>
   <div class="general">
     <NavBar></NavBar>
+    <PrincipalList></PrincipalList>
   </div>
 </template>
 
 <script>
 import NavBar from './subcomponents/NavBar'
+import PrincipalList from './subcomponents/PrincipalList'
 export default {
   name: 'welcome',
-  components: {NavBar},
+  components: {NavBar, PrincipalList},
   data () {
     return {}
   }
