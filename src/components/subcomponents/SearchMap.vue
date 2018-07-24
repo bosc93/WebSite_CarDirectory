@@ -63,7 +63,7 @@ export default {
           height: -35
         }
       },
-      tMarker: [],
+      concessions: [],
       markers: [],
       places: [],
       currentPlace: null,
@@ -83,12 +83,12 @@ export default {
     },
     addMarkerSearch () {
       var data, i, nomConcession
-      var nbMarker = this.tMarker.length
+      var nbMarker = this.concessions.length
       nomConcession = ''
       this.addressExist = false
       if (this.currentPlace) {
         for (i = 0; i < nbMarker; i++) {
-          data = this.tMarker[i]
+          data = this.concessions[i]
           if (this.currentPlace.formatted_address == data.adresse + ', ' + data.codePostal + ' ' +
               data.ville + ', ' + data.pays) {
             this.addressExist = true
@@ -96,7 +96,7 @@ export default {
           }
         }
         if (this.addressExist) {
-          document.location.href='http://localhost:8080/concession/' + nomConcession
+          document.location.href='/concession/' + nomConcession
         }else {
           this.markers = []
           const marker = {
@@ -134,11 +134,11 @@ export default {
     },
     displayMarkersCarDealer () {
       var data, i
-      var nbMarker = this.tMarker.length
+      var nbMarker = this.concessions.length
       for (i = 0; i < nbMarker; i++) {
-        data = this.tMarker[i]
+        data = this.concessions[i]
         var contentHtml = '<div id="bodyContent">' +
-          '<h6><center><a href="http://localhost:8080/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
+          '<h6><center><a href="/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
           '<div id="bodyContent">' +
           data.adresse +
           '</br>' + data.codePostal + ' ' + data.ville +
@@ -177,8 +177,8 @@ export default {
     getAllConcession: function () {
       this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
       .then(function (response) {
-         this.tMarker = response.data
-         console.log(this.tMarker)
+         this.concessions = response.data
+         console.log(this.concessions)
       })
       .catch(function (error) {
          console.log(error)

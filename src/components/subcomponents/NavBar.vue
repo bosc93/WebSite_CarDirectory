@@ -3,14 +3,14 @@
 
   <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-    <b-navbar-brand href="http://localhost:8080">
-      <img src="https://placekitten.com/g/30/30" class="d-inline-block align-top" alt="BV">
-      {{ msg }}
-    </b-navbar-brand>
+      <b-navbar-brand href="/">
+        <img src="https://placekitten.com/g/30/30" class="d-inline-block align-top" alt="BV">
+        {{ msg }}
+      </b-navbar-brand>
 
   <b-collapse is-nav id="nav_collapse">
 
-    <b-navbar-nav>
+    <b-navbar-nav v-if="this.$route.path === '/'"> <!-- Si on est sur la page d'acceuil -->
       <b-button @click="showModal" variant="primary">
         <b-nav-item>Présentation de l'annuaire</b-nav-item>
       </b-button>
@@ -25,7 +25,7 @@
     <!-- Right aligned nav items -->
     <b-navbar-nav class="ml-auto">
 
-      <b-nav-form>
+      <b-nav-form> <!-- V-for sur les villes des concessions et si ville existe aller dessus sinon 404 page not found -->
         <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Rechercher concession"/>
         <b-button size="sm" class="my-2 my-sm-0" type="submit">Rechercher</b-button>
       </b-nav-form>
@@ -54,8 +54,12 @@ export default {
   name: 'navBar',
   data () {
     return {
-      msg: 'CarDirectory'
+      msg: 'CarDirectory',
+      concessions: []
     }
+  },
+  mounted: function () {
+    this.getAllConcession()
   },
   methods: {
     showModal () {
@@ -63,6 +67,16 @@ export default {
     },
     hideModal () {
       this.$refs.myModalRef.hide()
+    },
+    getAllConcession: function () {
+      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
+        .then(function (response) {
+          this.concessions = response.data
+          console.log(this.concessions)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
     }
   }
 }
