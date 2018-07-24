@@ -1,16 +1,16 @@
 <template>
   <div class="general">
     <NavBar></NavBar>
-    <PrincipalList></PrincipalList>
+    <PageNotFound></PageNotFound>
   </div>
 </template>
 
 <script>
 import NavBar from './subcomponents/NavBar'
-import PrincipalList from './subcomponents/PrincipalList'
+import PageNotFound from './subcomponents/PageNotFound'
 export default {
-  name: 'welcome',
-  components: {NavBar, PrincipalList},
+  name: 'DetailsConcession',
+  components: {NavBar, PageNotFound},
   data () {
     return {}
   }

@@ -1,7 +1,7 @@
 <template>
   <section>
-    <div>
-      <label for="inputCityConcession"></label>
+    <div class="divInputCityConcession">
+      <label></label>
       <b-form-input id="inputCityConcession"
                     v-model="city"
                     type="text"
@@ -16,13 +16,13 @@
         <div class="card">
           <div class="row">
               <div class="col-md-5">
-                <a :href="'/List/' + concession.raisonSociale">
+                <a :href="'/concessions/' + concession.raisonSociale">
                   <div class="card-img-bottom"></div>
                 </a>
               </div>
             <div class="col-md-6">
               <div class="card-block">
-                <a :href="'/List/' + concession.raisonSociale">
+                <a :href="'/concessions/' + concession.raisonSociale">
                   <h4 class="card-title">{{ concession.raisonSociale }}</h4>
                 </a>
                 <p class="card-text">{{ concession.description }}</p>
@@ -100,5 +100,10 @@ export default {
 }
 .container {
   width: 50%; /* Aggrandir chaque élement de la liste */
+}
+.divInputCityConcession {
+  text-align: center;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
 </style>

@@ -96,7 +96,7 @@ export default {
           }
         }
         if (this.addressExist) {
-          document.location.href='/concession/' + nomConcession
+          document.location.href = '/concessions/' + nomConcession
         }else {
           this.markers = []
           const marker = {
@@ -138,7 +138,7 @@ export default {
       for (i = 0; i < nbMarker; i++) {
         data = this.concessions[i]
         var contentHtml = '<div id="bodyContent">' +
-          '<h6><center><a href="/concession/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
+          '<h6><center><a href="/concessions/' + data.raisonSociale + '">' + data.raisonSociale + '</a><center></h6>' +
           '<div id="bodyContent">' +
           data.adresse +
           '</br>' + data.codePostal + ' ' + data.ville +

@@ -1,14 +1,16 @@
 <template>
   <div class="general">
     <NavBar></NavBar>
+    <BlocImage></BlocImage>
   </div>
 </template>
 
 <script>
 import NavBar from './subcomponents/NavBar'
+import BlocImage from './subcomponents/BlocImage'
 export default {
-  name: 'welcome',
-  components: {NavBar},
+  name: 'DetailsConcession',
+  components: {NavBar, BlocImage},
   data () {
     return {}
   }

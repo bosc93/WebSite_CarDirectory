@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Welcome from '@/components/Welcome'
-import List from '@/components/List'
-import Details from '@/components/Details'
+import ConcessionsList from '@/components/ConcessionsList'
+import ErrorNotFound from '@/components/NotFound'
+import TemplateDetailsConcession from '@/components/DetailsConcession'
 
 Vue.use(Router)
 
@@ -15,14 +16,19 @@ export default new Router({
       component: Welcome
     },
     {
-      path: '/list',
-      name: 'List',
-      component: List
+      path: '*',
+      name: 'error',
+      component: ErrorNotFound
     },
     {
-      path: '/concession',
-      name: 'Details',
-      component: Details
+      path: '/concessions',
+      name: 'Concessions',
+      component: ConcessionsList
+    },
+    {
+      path: '/concessions/concessionDynamique', // renseigner la concession de manière dynamique
+      name: 'Template',
+      component: TemplateDetailsConcession
     }
   ]
 })

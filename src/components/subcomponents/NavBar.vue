@@ -25,9 +25,9 @@
     <!-- Right aligned nav items -->
     <b-navbar-nav class="ml-auto">
 
-      <b-nav-form> <!-- V-for sur les villes des concessions et si ville existe aller dessus sinon 404 page not found -->
-        <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Rechercher concession"/>
-        <b-button size="sm" class="my-2 my-sm-0" type="submit">Rechercher</b-button>
+      <b-nav-form>
+        <b-form-input v-model="inputConcession" size="sm" class="mr-sm-2" type="text" placeholder="Rechercher concession"/>
+        <b-button v-on:click="searchConcession" size="sm" class="my-2 my-sm-0">Rechercher</b-button>
       </b-nav-form>
 
       <b-nav-item-dropdown text="Langue" right>
@@ -55,6 +55,7 @@ export default {
   data () {
     return {
       msg: 'CarDirectory',
+      inputConcession: null,
       concessions: []
     }
   },
@@ -67,6 +68,22 @@ export default {
     },
     hideModal () {
       this.$refs.myModalRef.hide()
+    },
+    searchConcession: function () {
+      var i
+      var boolSearch = false
+      var nbConcession = this.concessions.length
+      if (this.inputConcession) {
+        for (i = 0; i < nbConcession; i++) {
+          if (this.inputConcession.charAt(0).toUpperCase() + this.inputConcession.slice(1) === this.concessions[i].raisonSociale) {
+            document.location.href = '/concessions/' + this.concessions[i].raisonSociale
+            boolSearch = true
+          }
+        }
+        if (!boolSearch) {
+          alert('Aucune concession correspondante, veuillez corriger votre recherche !')
+        }
+      }
     },
     getAllConcession: function () {
       this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
