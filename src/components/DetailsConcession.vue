@@ -1,16 +1,26 @@
 <template>
   <div class="general">
     <NavBar></NavBar>
-    <BlocImage></BlocImage>
+    <br/>
+    <TitleConcession></TitleConcession>
+    <br/>
+    <Carousel></Carousel>
+    <br/>
+    <Details></Details>
+    <br/>
+    <TimeTable></TimeTable>
   </div>
 </template>
 
 <script>
 import NavBar from './subcomponents/NavBar'
-import BlocImage from './subcomponents/BlocImage'
+import Carousel from './subcomponents/Carousel'
+import TitleConcession from './subcomponents/TitleConcession'
+import Details from './subcomponents/Details'
+import TimeTable from './subcomponents/TimeTable'
 export default {
   name: 'DetailsConcession',
-  components: {NavBar, BlocImage},
+  components: {NavBar, Carousel, TitleConcession, Details, TimeTable},
   data () {
     return {}
   }

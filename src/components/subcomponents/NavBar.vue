@@ -86,7 +86,7 @@ export default {
       }
     },
     getAllConcession: function () {
-      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
+      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/api.php?action=get_list_concession') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
         .then(function (response) {
           this.concessions = response.data
           console.log(this.concessions)

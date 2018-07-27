@@ -16,7 +16,7 @@
         <div class="card">
           <div class="row">
               <div class="col-md-5">
-                <a :href="'/concessions/' + concession.raisonSociale">
+                <a :href="'/concessions/' + concession.idConcession">
                   <div class="card-img-bottom"></div>
                 </a>
               </div>
@@ -49,6 +49,13 @@ export default {
       inputConcession: ''
     }
   },
+  filters: {
+    nameConcession: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return '/concessions/Concession test'
+    }
+  },
   mounted: function () {
     this.getAllConcession()
   },
@@ -71,7 +78,7 @@ export default {
       return res
     },
     getAllConcession: function () {
-      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/ajaxfile.php') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
+      this.$http.get('http://localhost:81/ProjectCar/Api_ProjectCar/api.php?action=get_list_concession') // Pointe sur l'api dans le localhost du wamp (ajaxfile.php) pour récupérer toutes les concessions
         .then(function (response) {
           this.concessions = response.data
           console.log(this.concessions)

@@ -26,7 +26,7 @@ export default new Router({
       component: ConcessionsList
     },
     {
-      path: '/concessions/concessionDynamique', // renseigner la concession de manière dynamique
+      path: '/concessions/:id', // renseigner la concession de manière dynamique
       name: 'Template',
       component: TemplateDetailsConcession
     }
