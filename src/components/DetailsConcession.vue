@@ -8,7 +8,9 @@
     <br/>
     <Details></Details>
     <br/>
-    <TimeTable></TimeTable>
+    <DetailsOperation></DetailsOperation>
+    <br/>
+    <Carousel></Carousel>
   </div>
 </template>
 
@@ -17,10 +19,10 @@ import NavBar from './subcomponents/NavBar'
 import Carousel from './subcomponents/Carousel'
 import TitleConcession from './subcomponents/TitleConcession'
 import Details from './subcomponents/Details'
-import TimeTable from './subcomponents/TimeTable'
+import DetailsOperation from './subcomponents/DetailsOperation'
 export default {
   name: 'DetailsConcession',
-  components: {NavBar, Carousel, TitleConcession, Details, TimeTable},
+  components: {NavBar, Carousel, TitleConcession, Details, DetailsOperation},
   data () {
     return {}
   }
@@ -33,5 +35,6 @@ export default {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: beige;
 }
 </style>

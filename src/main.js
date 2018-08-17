@@ -8,10 +8,12 @@ import App from './App'
 import router from './router'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueResource from 'vue-resource'
+import VueCarousel from 'vue-carousel'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(VueResource)
+Vue.use(VueCarousel)
 
 Vue.use(VueGoogleMaps, {
   load: {

@@ -3,7 +3,7 @@
     <div v-for="(concession, index) in concessions" :key="index">
       <div>
         <img class="icon_description" src="../../assets/icon_address.png" alt="address">
-        {{ concession.adresse + ', ' + concession.codePostal + ', ' + concession.ville + ', ' + concession.pays}}
+        {{ concession.adresse + ', ' + concession.codePostal + ', ' + concession.ville + ', ' + concession.pays }}
       </div>
       <div>
         <img class="icon_description" src="../../assets/icon_tel.png" alt="tel">
